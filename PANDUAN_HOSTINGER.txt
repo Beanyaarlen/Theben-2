@@ -1,0 +1,39 @@
+THEBEN CMS — PHP + MYSQL/MARIADB
+
+ISI PAKET
+Website Theben asli dengan editor 13 halaman, ringkasan popup produk, tombol pembelian, teks, gambar, alt, judul SEO dan deskripsi. Efek hover/reveal ditambahkan; slideshow asli dipertahankan. Bukan WordPress/Elementor dan bukan editor drag-and-drop. Teks dengan format campuran muncul dalam beberapa kolom editor agar format aslinya dipertahankan. HTML/CSS dan layout tidak diedit melalui dashboard.
+
+PERSIAPAN
+1. Backup seluruh public_html dan database lama. Uji paket di subdomain staging terlebih dahulu. Jangan memasang bersamaan dengan WordPress di folder yang sama.
+2. Paket memerlukan PHP 8.1+ (disarankan PHP 8.3/8.4) dengan PDO MySQL, DOM/XML, Fileinfo, session, dan mod_rewrite/LiteSpeed rewrite. Pilih Custom PHP/HTML, bukan Node.js/Python/Website Builder.
+3. Buat database dan user melalui hPanel. Simpan nama database, username, password, host database.
+
+PEMASANGAN
+1. Upload ZIP, ekstrak ISINYA langsung ke public_html, bukan public_html/theben-cms. File index.php, admin.php, .htaccess, Info? (template berada di private/templates/Info), assets, private, dan uploads harus pada tingkat yang benar. Tidak memerlukan tools atau perintah build.
+2. Impor schema.sql ke database lewat phpMyAdmin. Tabel harus kosong saat setup pertama.
+3. Salin config.example.php ke private/config.php. Isi dsn (nama database dan host), user, password. Buat setup_token acak minimal 32 karakter; token ini berbeda dari password admin. Jangan menggunakan nilai GANTI_ yang tersedia.
+4. Pastikan HTTPS/SSL aktif. Buka https://DOMAIN/setup.php; masukkan token setup dan buat username/password admin minimal 12 karakter. Installer mengimpor semua konten website dan membuat satu akun admin. Setup ditolak setelah akun dibuat.
+5. Hapus setup.php, schema.sql, config.example.php dan PANDUAN_HOSTINGER.txt dari folder publik setelah berhasil. Jangan hapus private/config.php atau private/templates.
+6. Buka https://DOMAIN/admin.php dan login. Website tersedia di https://DOMAIN/; URL Info/*.html lama tetap digunakan melalui rewrite.
+7. Pastikan https://DOMAIN/private/seed.json dan https://DOMAIN/private/config.php mengembalikan 403. Jika hosting tidak mematuhi .htaccess, hentikan pemasangan dan pindahkan private ke luar document root sambil menyesuaikan path pada kode.
+
+MENGEDIT
+Pilih halaman dari sidebar → cari konten → ubah → Simpan & publikasikan. Penyimpanan langsung memperbarui website. Buka halaman di tab baru untuk memeriksa hasil sebelum/sesudah simpan; belum ada sistem draft/revision/rollback atau live preview untuk perubahan yang belum disimpan.
+Upload JPG/PNG/WebP maksimal 5 MB lewat Upload gambar baru. Salin lokasi hasil upload ke src atau data-image pada elemen gambar yang dituju. Sesuaikan alt/data-alt. Gambar tersimpan sebagai file; alamatnya dalam SQL. File lama tidak dihapus otomatis.
+Untuk mengganti slide, ubah src gambar slide pada editor Beranda. Jumlah dan urutan slide tetap mengikuti struktur yang sudah ada. Penambahan slide/halaman baru memerlukan pengembangan template.
+Ringkasan popup dan tautan pembelian mempunyai editor tersendiri agar fungsi JavaScript mengikuti database. Channel pembelian gunakan tokopedia atau whatsapp sesuai tombol yang tersedia.
+Gunakan teks biasa; teks yang disimpan tidak dieksekusi sebagai HTML/JavaScript. URL harus tanpa spasi (gunakan %20 untuk nama file berspasi).
+Label konten menampilkan elemen dan cuplikan awal; gunakan pencarian untuk menemukan kolom yang ingin diubah.
+
+SEO DAN KOMPATIBILITAS
+Judul <title> dan meta description tersedia di editor setiap halaman. Konten dirender oleh PHP agar terbaca di HTML awal. Paket tidak membuat sitemap/canonical/schema bisnis otomatis karena URL final dan data bisnis perlu ditetapkan sesuai domain.
+Dua link katalog yang hilang diarahkan ke PDF iONprime yang sudah tersedia.
+Jika perubahan belum terlihat, bersihkan cache Hostinger/CDN/browser.
+
+BATASAN
+Satu peran admin, belum ada pengelolaan akun melalui UI atau reset password lewat email. Simpan password dengan aman.
+Animasi CSS/JS terinspirasi interaksi umum; bukan impor seluruh template Jitter. Preferensi reduced-motion dihormati untuk efek baru. Animasi slideshow asli tetap mengikuti kode sebelumnya.
+Jika PHP menampilkan 503: periksa private/config.php dan database. Jika 404 untuk Info/*.html: periksa .htaccess/mod_rewrite. Jika upload gagal: periksa izin uploads dan upload_max_filesize/post_max_size (minimal >5 MB). Jika halaman panjang tidak menyimpan semua kolom: atur max_input_vars ke 3000 dan post_max_size minimal 16 MB melalui pengaturan PHP.
+
+KEAMANAN DAN PEMELIHARAAN
+Login memakai hash password, session, CSRF, prepared SQL dan pembatasan login gagal. Upload hanya JPG/PNG/WebP dengan pemeriksaan MIME, dimensi, nama acak. Tetap gunakan HTTPS, backup, PHP yang didukung, dan uji pada server staging sebelum mengubah website produksi.
